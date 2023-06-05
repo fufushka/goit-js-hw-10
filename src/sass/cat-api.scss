@@ -1,0 +1,113 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+/*Just the background stuff*/
+
+.card {
+  background-color: #65647c;
+  position: relative;
+  height: 450px;
+  width: 900px;
+  margin: 200px auto;
+
+  -webkit-box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+}
+
+/* Image on the left side */
+.thumbnail {
+  float: left;
+  position: relative;
+  left: 30px;
+  top: -30px;
+  height: 320px;
+  width: 530px;
+  -webkit-box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+}
+
+img.left {
+  object-fit: cover;
+  object-position: center;
+  height: auto;
+  width: 100%;
+}
+
+/* Right side of the card */
+.right {
+  margin-left: 590px;
+  margin-right: 20px;
+}
+
+h1 {
+  color: #d8c4b6;
+  padding-top: 15px;
+}
+
+.separator {
+  margin-top: 10px;
+  border: 1px solid #c3c3c3;
+}
+
+.card_p {
+  color: #d8c4b6;
+  text-align: justify;
+  padding-top: 10px;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 150%;
+}
+.card_p1 {
+  font-size: 1rem;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #fff #fff transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent #ff3d00 #ff3d00;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+.is-hidden {
+  display: none;
+}

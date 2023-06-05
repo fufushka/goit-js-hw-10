@@ -1,22 +1,90 @@
-import { fetchBreeds } from './js/cat-api';
+import { fetchBreeds, fetchCatByBreed } from './js/cat-api';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
-new SlimSelect({
+import Notiflix, { Report } from 'notiflix';
+let isFirstLoad = true;
+const select = new SlimSelect({
   select: '.breed-select',
 });
 const refs = {
   select: document.querySelector('.breed-select'),
-  loader: document.querySelector('.loader'),
+  selectLib: document.querySelector('.ss-main'),
+  loader: document.querySelector('.loader-text'),
+  loaderAnim: document.querySelector('.loader'),
   error: document.querySelector('.error'),
   catInfo: document.querySelector('.cat-info'),
 };
+refs.selectLib.style.display = 'none';
 
 function fillSelectByBreeds(breeds) {
-  breeds.map(breed => {
-    const option = document.createElement('option');
-    option.value = breed.id;
-    option.textContent = breed.name;
-    refs.select.append(option);
+  const options = breeds.map(({ id, name }) => ({
+    text: name,
+    value: id,
+  }));
+  select.setData(options);
+  refs.loader.classList.remove('is-hidden');
+  refs.loaderAnim.classList.remove('is-hidden');
+}
+
+fetchCatByBreed()
+  .then(breeds => {
+    fillSelectByBreeds(breeds);
+    refs.selectLib.style.display = 'flex';
+    refs.loader.classList.add('is-hidden');
+    refs.loaderAnim.classList.add('is-hidden');
+  })
+  .catch(err => {
+    refs.loader.classList.add('is-hidden');
+    refs.loaderAnim.classList.add('is-hidden');
+    Report.failure(`Oops! Something went wrong! Try reloading the page! `);
+  });
+
+refs.select.addEventListener('change', onChangeSelect);
+function onChangeSelect() {
+  refs.loader.classList.remove('is-hidden');
+  refs.loaderAnim.classList.remove('is-hidden');
+
+  if (isFirstLoad) {
+    isFirstLoad = false;
+    return;
+  }
+  refs.catInfo.innerHTML = '';
+
+  const breedId = refs.select.value;
+  fetchCatByBreed(breedId).then(data => {
+    if (!data) {
+      Notiflix.Notify.failure('Oops! Sth went wrong!');
+    }
+    appendMarkup(data);
+    refs.loader.classList.add('is-hidden');
+    refs.loaderAnim.classList.add('is-hidden');
   });
 }
-fetchBreeds().then(breeds => fillSelectByBreeds(breeds));
+
+function createMarkup({ description, temperament, name }, { url }) {
+  return `<div class="fond">
+      
+      </div>
+      <div class="card">
+        <div class="thumbnail">
+          <img
+            class="left"
+            src="${url}"
+          />
+        </div>
+        <div class="right">
+          <h1>${name}</h1>
+
+          <div class="separator"></div>
+          <p class="card_p card_p1">
+            ${description}
+          </p>
+          <p class="card_p">Temperament:</br>${temperament}</p>
+        </div>
+      </div>`;
+}
+function appendMarkup(data) {
+  const markup = createMarkup(data[0].breeds[0], data[0]);
+
+  refs.catInfo.innerHTML = markup;
+}
