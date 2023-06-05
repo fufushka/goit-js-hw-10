@@ -36,7 +36,7 @@ fetchCatByBreed()
   .catch(err => {
     refs.loader.classList.add('is-hidden');
     refs.loaderAnim.classList.add('is-hidden');
-    Report.failure(`Oops! Something went wrong! Try reloading the page! `);
+    Report.failure(`${err.message}`);
   });
 
 refs.select.addEventListener('change', onChangeSelect);
@@ -51,14 +51,23 @@ function onChangeSelect() {
   refs.catInfo.innerHTML = '';
 
   const breedId = refs.select.value;
-  fetchCatByBreed(breedId).then(data => {
-    if (!data) {
-      Notiflix.Notify.failure('Oops! Sth went wrong!');
-    }
-    appendMarkup(data);
-    refs.loader.classList.add('is-hidden');
-    refs.loaderAnim.classList.add('is-hidden');
-  });
+
+  fetchCatByBreed(breedId)
+    .then(data => {
+      if (!data) {
+        Notiflix.Notify.failure(
+          `Oops! Something went wrong! Try reloading the page! `
+        );
+      }
+      appendMarkup(data);
+      refs.loader.classList.add('is-hidden');
+      refs.loaderAnim.classList.add('is-hidden');
+    })
+    .catch(error => {
+      refs.loader.classList.add('is-hidden');
+      refs.loaderAnim.classList.add('is-hidden');
+      Report.failure(`${error.message}`);
+    });
 }
 
 function createMarkup({ description, temperament, name }, { url }) {
